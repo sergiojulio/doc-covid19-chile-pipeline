@@ -3,24 +3,25 @@
 # Container Registry
 # Cloud Scheduler
 # Cloud Run
-
 from diagrams import Cluster, Diagram
-from diagrams.aws.compute import ECS
-from diagrams.aws.database import RDS
-from diagrams.aws.network import Route53
+from diagrams.gcp.security import KeyManagementService as Secret
+from diagrams.gcp.devtools import Scheduler
+from diagrams.gcp.devtools import ContainerRegistry
+from diagrams.gcp.compute import Run
+from diagrams.onprem.vcs import Github
 
 with Diagram("Covid 19 Chile Etl architecture", show=False):
     
-    github = ECS("Github")
+    github = Github("Github")
 
     with Cluster("Google Cloud Platform"):
 
-        cloud_scheduler = RDS("Cloud Scheduler")
+        cloud_scheduler = Scheduler("Cloud Scheduler")
 
         with Cluster("Execution"):
 
-            cloud_run = RDS("Cloud Run")
-            cloud_run << [RDS("Secret Manager"), RDS("Container Registry")]
+            cloud_run = Run("Cloud Run")
+            cloud_run << [Secret("Secret Manager"), ContainerRegistry("Container Registry")]
 
     cloud_scheduler >> cloud_run
 
